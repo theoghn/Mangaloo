@@ -1,13 +1,12 @@
-package com.example.mangaloo.model
+package com.example.mangaloo.model.api
 
-import androidx.room.Entity
 import kotlinx.serialization.Serializable
 
 @Serializable
-@Entity
-data class ChapterAttributes(
+data class ApiChapterAttributes(
     val volume: String?,
     val chapter: String?,
     val translatedLanguage: String?,
     val pages: Int?,
+
 )

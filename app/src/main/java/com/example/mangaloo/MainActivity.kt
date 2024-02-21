@@ -17,7 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.mangaloo.api.BaseViewModel
+import com.example.mangaloo.ui.library.manga.TestViewModel
 import com.example.mangaloo.theme.MangalooTheme
 import com.example.mangaloo.ui.library.manga.MangaLibraryList
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,35 +33,26 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val viewModel: BaseViewModel = viewModel()
-                    MangaLibraryList()
+                    val viewModel: TestViewModel = viewModel()
+                    MangaLibraryList(viewModel)
                 }
             }
         }
     }
 }
 
-@Composable
-fun Greeting(viewModel: BaseViewModel) {
-    val response by viewModel.response.collectAsState()
-    Column {
-        Text(
-            text = response.response,
-        )
-        Spacer(modifier = Modifier.height(10.dp))
-        TextField(
-            value = if(response.data.count()>1)  response.data.count().toString() else "waitin",
-            onValueChange = {}
-
-        )
-    }
-
-}
-
-//@Preview(showBackground = true)
 //@Composable
-//fun GreetingPreview() {
-//    MangalooTheme {
-//        Greeting("Android")
+//fun Greeting(viewModel: TestViewModel) {
+//    Column {
+//        Text(
+//            text = response.response,
+//        )
+//        Spacer(modifier = Modifier.height(10.dp))
+//        TextField(
+//            value = if(response.data.count()>1)  response.data.count().toString() else "waitin",
+//            onValueChange = {}
+//
+//        )
 //    }
+//
 //}

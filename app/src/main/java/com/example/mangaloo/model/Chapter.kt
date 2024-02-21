@@ -1,5 +1,6 @@
 package com.example.mangaloo.model
 
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.serialization.Serializable
@@ -9,7 +10,8 @@ import kotlinx.serialization.Serializable
 data class Chapter(
     @PrimaryKey
     val id: String,
-    val type: String,
-//    val attributes: ChapterAttributes,
+    val mangaId:String,
+    val scanlationId:String,
+    @Embedded val attributes: ChapterAttributes,
 )
 

@@ -36,11 +36,11 @@ import coil.compose.AsyncImage
 
 @Composable
 fun MangaItem(
-    coverImage: String,
-    mangaName: String,
-    mangaAuthor: String,
-    mangaStatus: String,
-    lastChapter: Number
+    coverImage: String?,
+    mangaName: String?,
+    mangaAuthor: String?,
+    mangaStatus: String?,
+    lastChapter: String?
 ) {
     Box(
         modifier = Modifier
@@ -63,7 +63,7 @@ fun MangaItem(
                 contentScale = ContentScale.Crop
             )
             Column(Modifier.padding(start = 10.dp)) {
-                Text(text = mangaName, fontWeight = FontWeight.SemiBold, fontSize = 20.sp,modifier=Modifier.padding(8.dp))
+                Text(text = "$mangaName", fontWeight = FontWeight.SemiBold, fontSize = 20.sp,modifier=Modifier.padding(8.dp))
                 Spacer(modifier = Modifier.fillMaxHeight().weight(1f))
                 Text(text = "by $mangaAuthor", fontSize = 16.sp,modifier=Modifier.padding(8.dp))
                 Text(
