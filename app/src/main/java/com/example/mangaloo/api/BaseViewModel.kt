@@ -1,8 +1,10 @@
-package com.example.mangaloo
+package com.example.mangaloo.api
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.mangaloo.api.MangaDexApi
+import com.example.mangaloo.model.ChapterResponse
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException

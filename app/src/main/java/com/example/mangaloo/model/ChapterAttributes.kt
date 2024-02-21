@@ -1,4 +1,4 @@
-package com.example.mangaloo
+package com.example.mangaloo.model
 
 data class ChapterAttributes(
     val volume: String?,

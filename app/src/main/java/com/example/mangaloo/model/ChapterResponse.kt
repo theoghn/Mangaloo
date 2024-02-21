@@ -1,6 +1,6 @@
-package com.example.mangaloo
+package com.example.mangaloo.model
 
-import kotlinx.serialization.SerialName
+import com.example.mangaloo.model.Chapter
 import kotlinx.serialization.Serializable
 
 @Serializable
