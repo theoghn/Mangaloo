@@ -1,6 +1,5 @@
 package com.example.mangaloo.model.api.manga
 
-import com.example.mangaloo.model.api.ApiChapterAttributes
 import com.example.mangaloo.model.api.ApiRelation
 import kotlinx.serialization.Serializable
 

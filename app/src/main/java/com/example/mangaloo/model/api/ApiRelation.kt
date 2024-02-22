@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ApiRelation(
-    val result: String,
-    val response: String,
+    val id: String,
+    val type: String,
     val attributes: ApiRelationAttributes
 )
