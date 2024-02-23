@@ -72,6 +72,7 @@ fun NavigationHost(navController: NavHostController, isNavbarVisible: MutableSta
             isNavbarVisible.value = false
             ChapterList()
         }
+
     }
 }
 
