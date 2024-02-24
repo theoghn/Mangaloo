@@ -27,8 +27,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.mangaloo.model.api.manga.ApiManga
-import com.example.mangaloo.navigation.NavRoutes
-import com.example.mangaloo.ui.MangaItem
+import com.example.mangaloo.ui.manga.MangaItem
 
 @Composable
 fun MangaSearch(viewModel: MangaSearchViewModel) {

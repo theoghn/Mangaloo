@@ -8,5 +8,6 @@ data class ApiChapterAttributes(
     val chapter: String?,
     val translatedLanguage: String?,
     val pages: Int?,
-
+    val title: String,
+    val createdAt:String
 )

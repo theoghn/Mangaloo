@@ -82,7 +82,7 @@ dependencies {
 //    coil
     implementation("io.coil-kt:coil-compose:2.5.0")
 //    dagger hilt
-    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0-rc01")
     implementation("com.google.dagger:hilt-android:2.50")
     ksp("com.google.dagger:hilt-compiler:2.50")
 //    rooom DB
@@ -93,5 +93,7 @@ dependencies {
     ksp("androidx.room:room-compiler:$roomVersion")
 //    navigation
     implementation("androidx.navigation:navigation-compose:2.7.7")
+//    icons
+//    implementation("androidx.compose.material:material-icons-extended:1.6.1")
 
 }

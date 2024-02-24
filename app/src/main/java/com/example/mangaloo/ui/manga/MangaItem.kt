@@ -1,4 +1,4 @@
-package com.example.mangaloo.ui
+package com.example.mangaloo.ui.manga
 
 import android.graphics.BlurMaskFilter
 import androidx.compose.foundation.background

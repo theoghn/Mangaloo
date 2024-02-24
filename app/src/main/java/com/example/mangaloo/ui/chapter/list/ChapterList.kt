@@ -1,90 +1,81 @@
-package com.example.mangaloo.ui.chapter
+package com.example.mangaloo.ui.chapter.list
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.EaseInBack
-import androidx.compose.animation.core.EaseOutBounce
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material.icons.outlined.Star
+import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.twotone.ArrowBack
 import androidx.compose.material.icons.twotone.KeyboardArrowDown
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.CompositingStrategy
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.example.mangaloo.theme.MangalooTheme
+import com.example.mangaloo.R
+import com.example.mangaloo.ui.chapter.ChapterItem
+import java.text.DecimalFormat
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChapterList() {
-    val title = "Solo Leveling"
-//    val image =
-//        "https://mangadex.org/covers/32d76d19-8a05-4db0-9fc2-e0b0648fe9d0/e90bdc47-c8b9-4df7-b2c0-17641b645ee1.jpg.512.jpg"
-    val image =
-        "https://mangadex.org/covers/a77742b1-befd-49a4-bff5-1ad4e6b0ef7b/cb980d1e-4d2a-492e-9ca5-399bd21c02b3.jpg.512.jpg"
-    val description =
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit,ullamco laboris nisi ut aliquip ex ea commodo consequat. " +
-                "sed do eiusmod tempor incididunt ut labore et dolore magna ullamco laboris nisi ut aliquip ex ea commodo consequat." +
-                "aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." +
-                "ullamco laboris nisi ut aliquip ex ea commodo consequat.ullamco laboris nisi ut aliquip ex ea commodo consequat."
-    TopImage(image)
+fun ChapterList(viewModel: ChapterListViewModel) {
+    val chapterList by viewModel.chapters.collectAsState()
+    val manga by viewModel.manga.collectAsState()
+    val coverLink by viewModel.coverLink.collectAsState()
+    val follows by viewModel.follows.collectAsState()
+    val rating by viewModel.rating.collectAsState()
+
+
+
+
+
+    val mangaName = manga?.attributes?.title?.en
+    val mangaAuthor = manga?.relationships?.get(0)?.attributes?.name
+    val description = manga?.attributes?.description?.en
+
+    TopImage(coverLink)
 
     LazyColumn(Modifier.fillMaxSize()) {
+
         item {
             Box(
                 modifier = Modifier
@@ -92,37 +83,28 @@ fun ChapterList() {
                     .height(270.dp)
                     .background(Color.Transparent)
             )
-            DetailsSection(title,description = description)
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-                    .background(Color(0xFF0F0A20))
-            )
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-                    .background(Color(0xFF0F0A20))
-            )
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(800.dp)
-                    .background(Color.LightGray)
-            )
-
+            DetailsSection(mangaName, description = description,mangaAuthor,follows,rating)
         }
+        items(chapterList){ ch ->
+            val scanlationGroup = manga?.relationships?.filter { it.type == "scanlation_group" }
+            ChapterItem(
+                volume = ch.attributes.volume,
+                chapter = ch.attributes.chapter,
+                chapterTitle = ch.attributes.title,
+                scanlator = if(scanlationGroup?.count()!! >0) scanlationGroup[0].attributes.name else "",
+                uploadDate =ch.attributes.createdAt.substringBefore("+")
+            )
+        }
+
     }
-    TopBar(title = title)
+    TopBar(title = mangaName)
 
 
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(title: String) {
+fun TopBar(title: String?) {
     TopAppBar(
         scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
         colors = TopAppBarDefaults.topAppBarColors(Color.Transparent),
@@ -140,7 +122,7 @@ fun TopBar(title: String) {
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Spacer(modifier = Modifier.weight(1f))
-                Text(text = title, fontWeight = FontWeight.W800, fontSize = 24.sp)
+                Text(text = "$title", fontWeight = FontWeight.W800, fontSize = 24.sp)
                 Spacer(modifier = Modifier.weight(1f))
                 IconButton(modifier = Modifier, onClick = { /*TODO*/ }) {
                     Icon(
@@ -182,10 +164,12 @@ fun TopImage(image: String) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailsSection(title:String,description: String) {
-    val initialFll="85812"
-    val rating = "8.94"
-    val follow = if(initialFll.toInt()>1000) initialFll.toInt()/1000 else initialFll
+fun DetailsSection(title: String?, description: String?,author:String?,follow:Number,rating: Number) {
+    val df = DecimalFormat("#.##")
+    df.maximumFractionDigits = 2
+    val roundedNumber = df.format(rating)
+
+    val following = if (follow.toInt() > 1000) (follow.toInt() / 1000).toString() else follow.toString()
     var expandedState by remember { mutableStateOf(false) }
     val rotationState by animateFloatAsState(
         targetValue = if (expandedState) 180f else 0f, label = ""
@@ -196,25 +180,38 @@ fun DetailsSection(title:String,description: String) {
         Modifier
             .animateContentSize()
             .fillMaxWidth()
-            .then(if (expandedState) Modifier else Modifier.height(150.dp)),
+            .then(if (expandedState) Modifier else Modifier.height(180.dp)),
         shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally,modifier= Modifier.fillMaxWidth()) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(text = title, fontSize = 20.sp,modifier= Modifier.padding(8.dp))
-                Spacer(modifier = Modifier.weight(1f))
-                Text(text = rating, fontSize =14.sp,modifier= Modifier.padding(8.dp))
-                Icon(imageVector = Icons.Outlined.Star, contentDescription = "Star" )
-                Text(text = "${follow}k", fontSize = 14.sp,modifier= Modifier.padding(8.dp))
-                Icon(imageVector = Icons.Default.DateRange, contentDescription = "Star" )
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 12.dp, end = 12.dp)
+        ) {
 
+            TitleStats(title = "$title", rating = roundedNumber, follow = following)
 
+//            Author
+            Row(
+                verticalAlignment = Alignment.CenterVertically, modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 14.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Person,
+                    contentDescription = "Star",
+                    Modifier.size(18.dp)
+                )
+                Text(text = "$author", fontSize = 12.sp, modifier = Modifier.padding())
             }
-
+//            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.BottomCenter){
             Text(
                 modifier = Modifier
-                    .padding(start = 7.dp, top = 7.dp),
-                text = description,
+                    .padding(top = 12.dp)
+                    .graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen)
+                    .then(if (expandedState) Modifier else Modifier.fadingEdge()),
+
+                text = "$description",
                 maxLines = if (expandedState) 99 else 3,
                 overflow = TextOverflow.Ellipsis
             )
@@ -231,18 +228,68 @@ fun DetailsSection(title:String,description: String) {
                     contentDescription = "Drop-Down Arrow"
                 )
             }
+
+//            }
+
         }
 
     }
 
 }
 
-
-@Preview(showSystemUi = true)
 @Composable
-fun PreviewManga() {
-    MangalooTheme(darkTheme = true) {
-        ChapterList()
-
+fun TitleStats(title: String, rating: String, follow: String) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Text(
+            text = title,
+            fontSize = 22.sp,
+            modifier = Modifier.padding(start = 14.dp, top = 8.dp),
+            fontWeight = FontWeight.SemiBold
+        )
+        Spacer(modifier = Modifier.weight(1f))
+        Icon(
+            painter = painterResource(id = R.drawable.star2),
+            contentDescription = "Star",
+            Modifier.size(30.dp),
+            tint = Color.White
+        )
+        Text(
+            text = rating,
+            fontSize = 14.sp,
+            modifier = Modifier.padding(end = 8.dp, top = 8.dp, bottom = 8.dp)
+        )
+        Icon(
+            painter = painterResource(id = R.drawable.bookmark2),
+            contentDescription = "Star",
+            Modifier.size(30.dp)
+        )
+        Text(
+            text = "${follow}k",
+            fontSize = 14.sp,
+            modifier = Modifier.padding(end = 8.dp, top = 8.dp, bottom = 8.dp)
+        )
     }
 }
+
+fun Modifier.fadingEdge() = this.drawWithContent {
+    drawContent()
+    drawRect(
+        brush = Brush.verticalGradient(0.6f to Color.Black, 1f to Color.Transparent),
+        blendMode = BlendMode.DstIn
+    )
+}
+
+//@Preview(showSystemUi = true)
+//@Composable
+//fun PreviewManga() {
+//    MangalooTheme(darkTheme = true) {
+//        Surface(
+//            modifier = Modifier.fillMaxSize(),
+//            color = MaterialTheme.colorScheme.background
+//        ) {
+//            ChapterList()
+//
+//        }
+//
+//    }
+//}

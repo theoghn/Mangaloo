@@ -3,7 +3,6 @@ package com.example.mangaloo.ui
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -19,17 +18,17 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.mangaloo.navigation.NavRoutes
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.example.mangaloo.navigation.NavBarItems
-import com.example.mangaloo.ui.chapter.ChapterList
+import com.example.mangaloo.ui.chapter.list.ChapterList
+import com.example.mangaloo.ui.chapter.list.ChapterListViewModel
 import com.example.mangaloo.ui.manga.library.MangaLibrary
 import com.example.mangaloo.ui.manga.search.MangaSearch
 import com.example.mangaloo.ui.manga.search.MangaSearchViewModel
@@ -68,9 +67,14 @@ fun NavigationHost(navController: NavHostController, isNavbarVisible: MutableSta
             isNavbarVisible.value = true
             MangaLibrary { route: String -> navController.navigate(route) }
         }
-        composable(NavRoutes.chapterList.route) {
+        composable(NavRoutes.chapterList.route + "/{mangaId}") { backStackEntry ->
             isNavbarVisible.value = false
-            ChapterList()
+            val mangaId= backStackEntry.arguments?.getString("mangaId")?:""
+            val viewModel =
+                hiltViewModel<ChapterListViewModel, ChapterListViewModel.ChapterListViewModelFactory> { factory ->
+                    factory.create(mangaId)
+                }
+            ChapterList(viewModel)
         }
 
     }

@@ -2,6 +2,8 @@ package com.example.mangaloo.api
 
 import com.example.mangaloo.model.api.ApiChapterResponse
 import com.example.mangaloo.model.api.manga.ApiMangaResponse
+import com.example.mangaloo.model.api.manga.ApiMangaStatsResponse
+import com.example.mangaloo.model.api.manga.ApiSingleMangaResponse
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.http.GET
@@ -21,6 +23,7 @@ interface MangaDexApiService {
     @GET("manga/{mangaId}/feed?order%5Bchapter%5D=asc&includeEmptyPages=0&includes%5B%5D=scanlation_group")
     suspend fun getMangaChapters(
         @Path("mangaId") mangaId: String,
+        @Query("limit") limit: Int,
         @Query("translatedLanguage[]") languages: List<String>
     ): Response<ApiChapterResponse>
 
@@ -29,11 +32,19 @@ interface MangaDexApiService {
         @Query("title") title: String,
         @Query("includes[]") relations: List<String>,
         @Query("limit") limit: Int,
-        @Query("contentRating[]")content:List<String>
+        @Query("contentRating[]") content: List<String>
     ): Response<ApiMangaResponse>
 
+    @GET("manga/{mangaId}")
+    suspend fun getSingleManga(
+        @Path("mangaId") mangaId: String,
+        @Query("includes[]") relations: List<String>
+    ): Response<ApiSingleMangaResponse>
+
+    @GET("/statistics/manga/{mangaId}")
+    suspend fun getMangaStats(@Path("mangaId") mangaId: String, ): Response<ApiMangaStatsResponse>
     @GET("chapter")
-    suspend fun getChapter(@Query("ids[]") id: List<String?>):Response<ApiChapterResponse>
+    suspend fun getChapter(@Query("ids[]") id: List<String?>): Response<ApiChapterResponse>
 }
 
 object MangaDexApi {

@@ -10,7 +10,7 @@ import com.example.mangaloo.navigation.NavRoutes
 @Composable
 fun MangaLibrary(navigate: (String) -> Unit) {
     Box(modifier = Modifier.fillMaxSize()) {
-        Button(onClick = { navigate(NavRoutes.chapterList.route) }) {
+        Button(onClick = { navigate(NavRoutes.chapterList.route+"/a77742b1-befd-49a4-bff5-1ad4e6b0ef7b") }) {
 
         }
     }

@@ -1,18 +1,18 @@
 package com.example.mangaloo.model.api.manga
 
 
+import com.example.mangaloo.model.api.TextInLanguage
 import kotlinx.serialization.Serializable
 
 
 @Serializable
 data class ApiMangaAttributes(
-    val title: LanguageWithString,
+    val title: TextInLanguage,
+    val description:TextInLanguage,
     var lastChapter: String?,
     val status: String,
-    val latestUploadedChapter:String?
+    val latestUploadedChapter:String?,
+    val externalUrl:String?
 )
 
-@Serializable
-data class LanguageWithString(
-    val en:String
-)
+
