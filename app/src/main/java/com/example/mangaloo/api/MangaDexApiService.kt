@@ -1,6 +1,7 @@
 package com.example.mangaloo.api
 
-import com.example.mangaloo.model.api.ApiChapterResponse
+import com.example.mangaloo.model.api.ApiImagesResponse
+import com.example.mangaloo.model.api.chapter.ApiChapterResponse
 import com.example.mangaloo.model.api.manga.ApiMangaResponse
 import com.example.mangaloo.model.api.manga.ApiMangaStatsResponse
 import com.example.mangaloo.model.api.manga.ApiSingleMangaResponse
@@ -43,6 +44,9 @@ interface MangaDexApiService {
 
     @GET("/statistics/manga/{mangaId}")
     suspend fun getMangaStats(@Path("mangaId") mangaId: String, ): Response<ApiMangaStatsResponse>
+
+    @GET("/at-home/server/{mangaId}")
+    suspend fun getChapterImages(@Path("mangaId") mangaId: String, ): Response<ApiImagesResponse>
     @GET("chapter")
     suspend fun getChapter(@Query("ids[]") id: List<String?>): Response<ApiChapterResponse>
 }

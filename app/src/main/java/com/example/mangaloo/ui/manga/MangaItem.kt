@@ -2,6 +2,7 @@ package com.example.mangaloo.ui.manga
 
 import android.graphics.BlurMaskFilter
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,14 +29,17 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.example.mangaloo.navigation.NavRoutes
 
 @Composable
 fun MangaItem(
     coverImage: String?,
+    mangaId:String?,
     mangaName: String?,
     mangaAuthor: String?,
     mangaStatus: String?,
-    lastChapter: String?
+    lastChapter: String?,
+    navigate: (String) -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -45,6 +49,7 @@ fun MangaItem(
             .height(160.dp)
             .clip(RoundedCornerShape(20.dp))
             .background(Color.DarkGray)
+            .clickable {navigate(NavRoutes.chapterList.route+"/$mangaId")  }
     ) {
         Row {
             AsyncImage(

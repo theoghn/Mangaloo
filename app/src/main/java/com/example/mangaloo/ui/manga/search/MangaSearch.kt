@@ -30,16 +30,15 @@ import com.example.mangaloo.model.api.manga.ApiManga
 import com.example.mangaloo.ui.manga.MangaItem
 
 @Composable
-fun MangaSearch(viewModel: MangaSearchViewModel) {
+fun MangaSearch(viewModel: MangaSearchViewModel,navigate: (String) -> Unit) {
     val response by viewModel.response.collectAsState()
-
     val search: (String) -> Unit = { title ->
         viewModel.getManga(title)
     }
 
 
     Scaffold(topBar = {
-        SearchBar(search= search)
+        SearchBar(search= search,viewModel)
 //        Row(
 //            Modifier
 //                .fillMaxWidth()
@@ -62,14 +61,14 @@ fun MangaSearch(viewModel: MangaSearchViewModel) {
             NoDataText(it)
         } else {
             val mangaList = response.data
-            MangaLazyList(mangaList = mangaList, it)
+            MangaLazyList(mangaList = mangaList, it,navigate={ route: String -> navigate(route) })
         }
     }
 
 }
 
 @Composable
-fun MangaLazyList(mangaList: List<ApiManga?>, paddingValues: PaddingValues) {
+fun MangaLazyList(mangaList: List<ApiManga?>, paddingValues: PaddingValues,navigate: (String) -> Unit) {
     LazyColumn(Modifier.padding(paddingValues)) {
         items(mangaList) { manga ->
             val mangaId = manga?.id
@@ -82,7 +81,9 @@ fun MangaLazyList(mangaList: List<ApiManga?>, paddingValues: PaddingValues) {
                 lastChapter = manga?.attributes?.lastChapter,
                 mangaStatus = manga?.attributes?.status,
                 mangaName = manga?.attributes?.title?.en,
-                mangaAuthor = manga?.relationships?.get(0)?.attributes?.name
+                mangaAuthor = manga?.relationships?.get(0)?.attributes?.name,
+                navigate={ route: String -> navigate(route) },
+                mangaId = mangaId
             )
 
         }
@@ -106,13 +107,13 @@ fun NoDataText(paddingValues: PaddingValues){
 }
 @Composable
 fun SearchBar(
-    modifier: Modifier = Modifier,
-    search: (String) -> Unit
+    search: (String) -> Unit,
+    viewModel: MangaSearchViewModel
 ) {
-    var text by remember { mutableStateOf(TextFieldValue()) }
+    val searchTitle by viewModel.searchTitle.collectAsState()
 
     Row(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -120,9 +121,9 @@ fun SearchBar(
         TextField(
             modifier = Modifier
                 .weight(1f),
-            value = text,
+            value = searchTitle,
             onValueChange = {
-                text = it
+                viewModel.updateSearch(it)
             },
             placeholder = { Text(text = "Search") },
             singleLine = true
@@ -132,10 +133,10 @@ fun SearchBar(
 
         Button(
             onClick = {
-                search(text.text)
+                search(searchTitle)
             },
             modifier = Modifier.wrapContentWidth(),
-            enabled = text.text.isNotEmpty()
+            enabled = searchTitle!=""
         ) {
             Text(text = "Search")
         }

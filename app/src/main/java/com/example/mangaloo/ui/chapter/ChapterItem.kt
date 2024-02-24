@@ -24,7 +24,9 @@ fun ChapterItem(
     chapter: String?,
     chapterTitle: String?,
     scanlator: String?,
-    uploadDate: String
+    uploadDate: String,
+    openChapter: (String) -> Unit,
+    chapterId:String
 ) {
 
     val date = LocalDateTime.parse(uploadDate)
@@ -32,7 +34,7 @@ fun ChapterItem(
         modifier = Modifier
             .fillMaxWidth()
             .height(64.dp)
-            .clickable{}
+            .clickable{openChapter(chapterId)}
             .background(Color(0xFF0F0A20))
     ) {
         Column(modifier = Modifier.fillMaxSize().padding(horizontal = 12.dp).padding(vertical = 10.dp)) {

@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.mangaloo.api.MangaDexApi
 import com.example.mangaloo.model.api.manga.ApiMangaResponse
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
@@ -13,7 +14,9 @@ import java.io.IOException
 //@HiltViewModel
 class MangaSearchViewModel : ViewModel() {
     val response = MutableStateFlow(ApiMangaResponse("", "", emptyList()))
+    val searchTitle = MutableStateFlow("")
 
+    fun updateSearch(newTitle:String)=searchTitle.update { newTitle }
 
 //    init {
 //        getManga()

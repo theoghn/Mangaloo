@@ -57,7 +57,11 @@ import java.text.DecimalFormat
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChapterList(viewModel: ChapterListViewModel) {
+fun ChapterList(
+    viewModel: ChapterListViewModel,
+    goBack: () -> Boolean,
+    openChapter: (String) -> Unit
+) {
     val chapterList by viewModel.chapters.collectAsState()
     val manga by viewModel.manga.collectAsState()
     val coverLink by viewModel.coverLink.collectAsState()
@@ -92,24 +96,26 @@ fun ChapterList(viewModel: ChapterListViewModel) {
                 chapter = ch.attributes.chapter,
                 chapterTitle = ch.attributes.title,
                 scanlator = if(scanlationGroup?.count()!! >0) scanlationGroup[0].attributes.name else "",
-                uploadDate =ch.attributes.createdAt.substringBefore("+")
+                uploadDate =ch.attributes.createdAt.substringBefore("+"),
+                openChapter = {chapterId:String->openChapter(chapterId)},
+                chapterId = ch.id
             )
         }
 
     }
-    TopBar(title = mangaName)
+    TopBar(title = mangaName, goBack = {goBack()})
 
 
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(title: String?) {
+fun TopBar(title: String?, goBack: () -> Boolean) {
     TopAppBar(
         scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
         colors = TopAppBarDefaults.topAppBarColors(Color.Transparent),
         navigationIcon = {
-            IconButton(onClick = { }) {
+            IconButton(onClick = {goBack() }) {
                 Icon(
                     imageVector = Icons.TwoTone.ArrowBack,
                     contentDescription = "Back",

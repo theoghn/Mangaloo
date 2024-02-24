@@ -1,4 +1,4 @@
-package com.example.mangaloo.model.api
+package com.example.mangaloo.model.api.chapter
 
 import kotlinx.serialization.Serializable
 
