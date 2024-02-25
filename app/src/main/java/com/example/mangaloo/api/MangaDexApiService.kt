@@ -1,5 +1,6 @@
 package com.example.mangaloo.api
 
+import com.example.mangaloo.model.SortingCriteria
 import com.example.mangaloo.model.api.ApiImagesResponse
 import com.example.mangaloo.model.api.chapter.ApiChapterResponse
 import com.example.mangaloo.model.api.manga.ApiMangaResponse
@@ -11,6 +12,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.QueryMap
 
 const val BASE_URL = "https://api.mangadex.org/"
 val retrofit: Retrofit =
@@ -28,12 +30,15 @@ interface MangaDexApiService {
         @Query("translatedLanguage[]") languages: List<String>
     ): Response<ApiChapterResponse>
 
-    @GET("manga?&order%5Brating%5D=desc&order%5BfollowedCount%5D=desc")
+    @GET("manga")
     suspend fun getManga(
-        @Query("title") title: String,
+//        order can be followedCount/rating
+
+        @Query("title") title: String?,
         @Query("includes[]") relations: List<String>,
         @Query("limit") limit: Int,
-        @Query("contentRating[]") content: List<String>
+        @Query("contentRating[]") content: List<String>,
+        @QueryMap order: Map<String, String>
     ): Response<ApiMangaResponse>
 
     @GET("manga/{mangaId}")
@@ -56,3 +61,5 @@ object MangaDexApi {
         retrofit.create(MangaDexApiService::class.java)
     }
 }
+
+

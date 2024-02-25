@@ -13,6 +13,8 @@ import androidx.navigation.compose.rememberNavController
 import com.example.mangaloo.theme.MangalooTheme
 import com.example.mangaloo.ui.chapter.reader.ChapterReader
 import com.example.mangaloo.ui.chapter.reader.ChapterReaderViewModel
+import com.example.mangaloo.ui.home.Home
+import com.example.mangaloo.ui.home.HomeViewModel
 import com.example.mangaloo.ui.main.MainScreen
 import com.example.mangaloo.ui.main.MainScreenViewModel
 import com.example.mangaloo.ui.manga.search.MangaSearchViewModel
@@ -31,6 +33,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val viewModel: MainScreenViewModel = viewModel()
                     MainScreen(viewModel)
+
 
                 }
             }

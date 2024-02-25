@@ -83,7 +83,7 @@ fun MangaLazyList(mangaList: List<ApiManga?>, paddingValues: PaddingValues,navig
                 mangaName = manga?.attributes?.title?.en,
                 mangaAuthor = manga?.relationships?.get(0)?.attributes?.name,
                 navigate={ route: String -> navigate(route) },
-                mangaId = mangaId
+                mangaId = mangaId,
             )
 
         }

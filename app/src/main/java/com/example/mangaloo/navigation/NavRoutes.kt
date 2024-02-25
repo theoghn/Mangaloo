@@ -5,10 +5,7 @@ sealed class NavRoutes(val route: String) {
     data object mangaLibrary : NavRoutes("MangaLibrary")
     data object chapterList : NavRoutes("ChapterList")
     data object chapterReader : NavRoutes("ChapterReader")
-
-
-
-
+    data object homeView : NavRoutes("HomeView")
 
 
 }

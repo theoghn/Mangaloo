@@ -39,12 +39,14 @@ import com.example.mangaloo.ui.chapter.list.ChapterList
 import com.example.mangaloo.ui.chapter.list.ChapterListViewModel
 import com.example.mangaloo.ui.chapter.reader.ChapterReader
 import com.example.mangaloo.ui.chapter.reader.ChapterReaderViewModel
+import com.example.mangaloo.ui.home.Home
+import com.example.mangaloo.ui.home.HomeViewModel
 import com.example.mangaloo.ui.manga.library.MangaLibrary
 import com.example.mangaloo.ui.manga.search.MangaSearch
 import com.example.mangaloo.ui.manga.search.MangaSearchViewModel
 
 @Composable
-fun MainScreen( mainScreenViewModel: MainScreenViewModel) {
+fun MainScreen(mainScreenViewModel: MainScreenViewModel) {
     val navController = rememberNavController()
     val isNavBarVisible = remember { mutableStateOf(true) }
     Scaffold(
@@ -66,21 +68,30 @@ fun MainScreen( mainScreenViewModel: MainScreenViewModel) {
 @Composable
 fun NavigationHost(navController: NavHostController, isNavbarVisible: MutableState<Boolean>) {
     val searchViewModel: MangaSearchViewModel = viewModel()
+    val homeViewModel: HomeViewModel = viewModel()
 
     NavHost(navController = navController,
-        startDestination = NavRoutes.mangaLibrary.route,
+        startDestination = NavRoutes.homeView.route,
         enterTransition = { EnterTransition.None },
         exitTransition = { ExitTransition.None }) {
+        composable(NavRoutes.homeView.route) {
+            isNavbarVisible.value = true
+            Home(homeViewModel)
+        }
+
         composable(NavRoutes.mangaSearch.route) {
             isNavbarVisible.value = true
             MangaSearch(
                 searchViewModel,
                 navigate = { route: String -> navController.navigate(route) })
         }
+
         composable(NavRoutes.mangaLibrary.route) {
             isNavbarVisible.value = true
             MangaLibrary { route: String -> navController.navigate(route) }
         }
+
+
         composable(NavRoutes.chapterList.route + "/{mangaId}") { backStackEntry ->
             isNavbarVisible.value = false
             val mangaId = backStackEntry.arguments?.getString("mangaId") ?: ""
@@ -94,6 +105,8 @@ fun NavigationHost(navController: NavHostController, isNavbarVisible: MutableSta
                 openChapter = { chapterId: String -> navController.navigate(NavRoutes.chapterReader.route + "/" + chapterId) }
             )
         }
+
+
         composable(NavRoutes.chapterReader.route + "/{chapterId}") { backStackEntry ->
             isNavbarVisible.value = false
             val chapterId = backStackEntry.arguments?.getString("chapterId") ?: ""
@@ -110,17 +123,19 @@ fun NavigationHost(navController: NavHostController, isNavbarVisible: MutableSta
 @Composable
 fun NavBar(navController: NavHostController, mainScreenViewModel: MainScreenViewModel) {
 
-    BottomNavigation(Modifier.height(64.dp)) {
+    BottomNavigation(Modifier.height(50.dp)) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentDestination = navBackStackEntry?.destination
         NavBarItems.BarItems.forEach { item ->
             BottomNavigationItem(
-                icon = { Icon(
+                icon = {
+                    Icon(
                         imageVector = item.unselected,
-                        tint =  if (currentDestination?.hierarchy?.any { it.route == item.route } == true) Color.White else Color.Gray,
+                        tint = if (currentDestination?.hierarchy?.any { it.route == item.route } == true) Color.White else Color.Gray,
                         contentDescription = null,
                         modifier = Modifier.fillMaxSize(0.55F)
-                    ) },
+                    )
+                },
                 selected = currentDestination?.hierarchy?.any { it.route == item.route } == true,
                 onClick = {
                     navController.navigate(item.route) {

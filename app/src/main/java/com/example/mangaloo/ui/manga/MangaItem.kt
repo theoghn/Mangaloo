@@ -39,14 +39,14 @@ fun MangaItem(
     mangaAuthor: String?,
     mangaStatus: String?,
     lastChapter: String?,
-    navigate: (String) -> Unit
+    navigate: (String) -> Unit,
 ) {
     Box(
         modifier = Modifier
             .padding(15.dp)
             .shadow2(color = Color.Black, borderRadius = 20.dp, blurRadius = 13.dp)
             .fillMaxWidth()
-            .height(160.dp)
+            .height(140.dp)
             .clip(RoundedCornerShape(20.dp))
             .background(Color.DarkGray)
             .clickable {navigate(NavRoutes.chapterList.route+"/$mangaId")  }
@@ -59,7 +59,7 @@ fun MangaItem(
                     .padding(8.dp)
                     .clip(RoundedCornerShape(12.dp))
                     .fillMaxHeight()
-                    .width(105.dp),
+                    .width(90.dp),
                 contentScale = ContentScale.Crop
             )
             Column(Modifier.padding(start = 10.dp)) {

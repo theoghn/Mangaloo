@@ -5,6 +5,7 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.filled.Home
 
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Search
 
 object NavBarItems {
@@ -13,14 +14,21 @@ object NavBarItems {
             title = "Home",
             selected = Icons.Filled.Home,
             unselected = Icons.Outlined.Home,
-            route = "MangaLibrary"
+            route = "HomeView"
         ),
         BarItem(
             title = "Find",
             selected = Icons.Filled.Search,
             unselected = Icons.Outlined.Search,
             route = "MangaSearch"
+        ),
+        BarItem(
+            title = "Library",
+            selected = Icons.Outlined.Person,
+            unselected = Icons.Outlined.Person,
+            route = "MangaLibrary"
         )
+
 
 
     )
