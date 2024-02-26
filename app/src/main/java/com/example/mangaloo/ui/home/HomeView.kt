@@ -1,6 +1,7 @@
 package com.example.mangaloo.ui.home
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -43,18 +44,19 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
 import coil.compose.AsyncImage
 import com.example.mangaloo.R
+import com.example.mangaloo.navigation.NavRoutes
 import com.example.mangaloo.theme.MangalooTheme
 import com.example.mangaloo.ui.manga.MangaItem
 import kotlin.math.absoluteValue
 
 
 @Composable
-fun Home(viewModel: HomeViewModel) {
+fun Home(viewModel: HomeViewModel, navigate: (String) -> Unit) {
     Scaffold(topBar = { HomeTopBar() }) {
         Column(Modifier.padding(it)) {
-            Recommendation()
+            Recommendation { route: String -> navigate(route) }
             Buttons(viewModel)
-            BestRated(viewModel)
+            BestRated(viewModel) { route: String -> navigate(route) }
         }
     }
 }
@@ -64,7 +66,7 @@ fun HomeTopBar() {
     Row(
         Modifier
             .fillMaxWidth()
-            .padding(horizontal = 14.dp, vertical = 18.dp)
+            .padding(start = 14.dp,end = 14.dp, bottom = 18.dp,top = 2.dp)
     ) {
         Text(
             "Discover", fontSize = 28.sp, fontWeight = FontWeight.SemiBold, fontFamily = FontFamily(
@@ -76,7 +78,8 @@ fun HomeTopBar() {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun Recommendation() {
+fun Recommendation(navigate: (String) -> Unit) {
+//    hardcoded my recommendation
     val sl =
         "https://mangadex.org/covers/32d76d19-8a05-4db0-9fc2-e0b0648fe9d0/e90bdc47-c8b9-4df7-b2c0-17641b645ee1.jpg.512.jpg"
     val chainsaw =
@@ -85,7 +88,13 @@ fun Recommendation() {
         "https://mangadex.org/covers/c52b2ce3-7f95-469c-96b0-479524fb7a1a/40dfaef9-0360-4086-b0d2-d655579bf1d0.jpg.512.jpg"
     val onePunch =
         "https://mangadex.org/covers/d8a959f7-648e-4c8d-8f23-f1f3f8e129f3/c6da6ed5-33c0-4c3a-8591-b1c41510d5a6.jpg.512.jpg"
-    val recommended = listOf<String>(sl, chainsaw, juju, onePunch)
+    val ids = listOf(
+        "32d76d19-8a05-4db0-9fc2-e0b0648fe9d0",
+        "a77742b1-befd-49a4-bff5-1ad4e6b0ef7b",
+        "c52b2ce3-7f95-469c-96b0-479524fb7a1a",
+        "d8a959f7-648e-4c8d-8f23-f1f3f8e129f3"
+    )
+    val recommended = listOf(sl, chainsaw, juju, onePunch)
     val pagerState = rememberPagerState(pageCount = { recommended.count() }, initialPage = 1)
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     val itemWidth = screenWidth * 0.55f // Adjust as needed
@@ -102,6 +111,7 @@ fun Recommendation() {
         ) { page ->
             Card(
                 Modifier
+                    .clickable { navigate(NavRoutes.chapterList.route + "/${ids[page]}") }
                     .fillMaxWidth()
                     .fillMaxHeight(0.44f)
                     .graphicsLayer {
@@ -148,19 +158,19 @@ fun Recommendation() {
 }
 
 @Composable
-fun BestRated(viewModel:HomeViewModel) {
+fun BestRated(viewModel: HomeViewModel, navigate: (String) -> Unit) {
     val mostPopular by viewModel.popularManga.collectAsState()
     val bestRated by viewModel.bestRatedManga.collectAsState()
     val selectedIndex by viewModel.selectedIndex.collectAsState()
     val scrollState = rememberLazyListState()
 
-    val show = if (selectedIndex == 1)bestRated else mostPopular
+    val show = if (selectedIndex == 1) bestRated else mostPopular
 
-    LaunchedEffect(selectedIndex){
+    LaunchedEffect(selectedIndex) {
         scrollState.scrollToItem(0)
     }
 
-    LazyColumn(state=scrollState) {
+    LazyColumn(state = scrollState) {
         items(show) { manga ->
             val mangaId = manga?.id
             val rel = manga?.relationships?.filter { it.type == "cover_art" }
@@ -171,9 +181,9 @@ fun BestRated(viewModel:HomeViewModel) {
                 coverImage = coverFinalLink,
                 lastChapter = manga?.attributes?.lastChapter,
                 mangaStatus = manga?.attributes?.status,
-                mangaName = manga?.attributes?.title?.en?:manga?.attributes?.title?.jaRo ,
+                mangaName = manga?.attributes?.title?.en ?: manga?.attributes?.title?.jaRo,
                 mangaAuthor = manga?.relationships?.get(0)?.attributes?.name,
-                navigate={ },
+                navigate = { route: String -> navigate(route) },
                 mangaId = mangaId
             )
 
@@ -182,7 +192,7 @@ fun BestRated(viewModel:HomeViewModel) {
 }
 
 @Composable
-fun Buttons(viewModel:HomeViewModel) {
+fun Buttons(viewModel: HomeViewModel) {
     val selectedIndex by viewModel.selectedIndex.collectAsState()
     Row(
         Modifier
@@ -192,20 +202,18 @@ fun Buttons(viewModel:HomeViewModel) {
         ElevatedButton(
             onClick = { viewModel.changeIndex(0) },
             Modifier.padding(end = 12.dp),
-            colors = if (selectedIndex == 0) ButtonDefaults.buttonColors(containerColor = Color(
-                0xFFB481E7
-            )
-            ) else ButtonDefaults.elevatedButtonColors()
+            colors = if (selectedIndex == 0) ButtonDefaults.buttonColors(containerColor = Color(0xFF5B8FB9))
+            else ButtonDefaults.elevatedButtonColors(containerColor = Color(0xFF061831))
         ) {
-            Text("Popular")
+            Text("Popular", color = Color.White)
         }
         ElevatedButton(
+
             onClick = { viewModel.changeIndex(1) },
-            colors = if (selectedIndex == 1) ButtonDefaults.buttonColors(containerColor = Color(
-                0xFFB481E7
-            )) else ButtonDefaults.elevatedButtonColors()
+            colors = if (selectedIndex == 1) ButtonDefaults.buttonColors(containerColor = Color(0xFF5B8FB9))
+            else ButtonDefaults.elevatedButtonColors(containerColor = Color(0xFF061831))
         ) {
-            Text("Best Rated")
+            Text("Best Rated", color = Color.White )
         }
     }
 

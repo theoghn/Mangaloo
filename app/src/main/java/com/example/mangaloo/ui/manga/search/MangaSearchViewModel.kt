@@ -16,6 +16,7 @@ import java.io.IOException
 class MangaSearchViewModel : ViewModel() {
     val response = MutableStateFlow(ApiMangaResponse("", "", emptyList()))
     val searchTitle = MutableStateFlow("")
+    val isLoading = MutableStateFlow(false)
 
     fun updateSearch(newTitle:String)=searchTitle.update { newTitle }
 
@@ -66,6 +67,7 @@ class MangaSearchViewModel : ViewModel() {
 
 
     fun getManga(title: String) {
+        isLoading.update { true }
         viewModelScope.launch {
             val order = mapOf(
                 "rating" to "desc",
@@ -83,6 +85,8 @@ class MangaSearchViewModel : ViewModel() {
                 )
                 if (listResult.isSuccessful && listResult.body() != null) {
                     response.value = listResult.body()!!
+                    isLoading.update { false }
+
                 }
             } catch (e: HttpException) {
                 Log.d("Errorrrrr", "failed")

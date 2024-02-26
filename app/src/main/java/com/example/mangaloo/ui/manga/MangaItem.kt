@@ -48,7 +48,7 @@ fun MangaItem(
             .fillMaxWidth()
             .height(140.dp)
             .clip(RoundedCornerShape(20.dp))
-            .background(Color.DarkGray)
+            .background(Color(0xFF11244A))
             .clickable {navigate(NavRoutes.chapterList.route+"/$mangaId")  }
     ) {
         Row {

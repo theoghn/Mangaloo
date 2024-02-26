@@ -34,6 +34,7 @@ class ChapterListViewModel@AssistedInject constructor(
     }
 
     private fun getStats(mangaId: String) {
+        Log.d("MangaId",mangaId)
         viewModelScope.launch {
             try {
                 val listResult = MangaDexApi.retrofitService.getMangaStats(mangaId)

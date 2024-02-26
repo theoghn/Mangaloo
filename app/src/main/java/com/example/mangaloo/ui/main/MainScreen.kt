@@ -59,7 +59,7 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel) {
             if (isNavBarVisible.value) {
                 NavBar(navController = navController, mainScreenViewModel)
             }
-        }
+        },
 
     )
 
@@ -76,7 +76,7 @@ fun NavigationHost(navController: NavHostController, isNavbarVisible: MutableSta
         exitTransition = { ExitTransition.None }) {
         composable(NavRoutes.homeView.route) {
             isNavbarVisible.value = true
-            Home(homeViewModel)
+            Home(homeViewModel, navigate = { route: String -> navController.navigate(route) })
         }
 
         composable(NavRoutes.mangaSearch.route) {
@@ -123,7 +123,7 @@ fun NavigationHost(navController: NavHostController, isNavbarVisible: MutableSta
 @Composable
 fun NavBar(navController: NavHostController, mainScreenViewModel: MainScreenViewModel) {
 
-    BottomNavigation(Modifier.height(50.dp)) {
+    BottomNavigation(Modifier.height(50.dp), backgroundColor = Color(0xFF061831)) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentDestination = navBackStackEntry?.destination
         NavBarItems.BarItems.forEach { item ->

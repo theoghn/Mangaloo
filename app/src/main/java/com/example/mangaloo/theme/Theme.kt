@@ -20,8 +20,7 @@ private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
     secondary = PurpleGrey80,
     tertiary = Pink80,
-    background = Color(0xFF0F0A20),
-
+    background = Color(0xFF030A1C),
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -59,7 +58,7 @@ fun MangalooTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.primary.toArgb()
+            window.statusBarColor = Color(0xFF030A1C).toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
     }

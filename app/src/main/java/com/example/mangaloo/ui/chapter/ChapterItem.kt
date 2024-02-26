@@ -35,19 +35,19 @@ fun ChapterItem(
             .fillMaxWidth()
             .height(64.dp)
             .clickable{openChapter(chapterId)}
-            .background(Color(0xFF0F0A20))
+            .background(Color(0xFF030A1C))
     ) {
         Column(modifier = Modifier.fillMaxSize().padding(horizontal = 12.dp).padding(vertical = 10.dp)) {
             Row(modifier = Modifier.fillMaxWidth()) {
-                if (volume != "")
+                if (volume.isNullOrBlank())
                     Text(text = "Vol.${volume} ")
                 Text(text = "Ch.${chapter} ")
-                if (chapterTitle != "")
+                if (!chapterTitle.isNullOrBlank())
                     Text(text = "• $chapterTitle", maxLines = 1, overflow = TextOverflow.Ellipsis)
             }
             Row(modifier = Modifier.fillMaxWidth().padding(top=4.dp)) {
                 Text(text = "${date.monthValue}/${date.dayOfMonth}/${date.year} ", fontSize = 12.sp)
-                if (scanlator != "")
+                if (scanlator.isNullOrBlank())
                     Text(text = "• $scanlator", fontSize = 12.sp)
             }
 

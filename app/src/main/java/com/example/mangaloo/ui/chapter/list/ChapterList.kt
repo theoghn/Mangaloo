@@ -72,7 +72,7 @@ fun ChapterList(
 
 
 
-    val mangaName = manga?.attributes?.title?.en
+    val mangaName = manga?.attributes?.title?.en?:manga?.attributes?.title?.jaRo
     val mangaAuthor = manga?.relationships?.get(0)?.attributes?.name
     val description = manga?.attributes?.description?.en
 
@@ -181,7 +181,7 @@ fun DetailsSection(title: String?, description: String?,author:String?,follow:Nu
         targetValue = if (expandedState) 180f else 0f, label = ""
     )
     Card(
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF0F0A20)),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF030A1C)),
         modifier =
         Modifier
             .animateContentSize()
@@ -249,7 +249,7 @@ fun TitleStats(title: String, rating: String, follow: String) {
         Text(
             text = title,
             fontSize = 22.sp,
-            modifier = Modifier.padding(start = 14.dp, top = 8.dp),
+            modifier = Modifier.padding(start = 14.dp, top = 8.dp).fillMaxWidth(0.6f),
             fontWeight = FontWeight.SemiBold
         )
         Spacer(modifier = Modifier.weight(1f))
