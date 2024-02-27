@@ -39,7 +39,7 @@ fun ChapterItem(
     ) {
         Column(modifier = Modifier.fillMaxSize().padding(horizontal = 12.dp).padding(vertical = 10.dp)) {
             Row(modifier = Modifier.fillMaxWidth()) {
-                if (volume.isNullOrBlank())
+                if (!volume.isNullOrBlank())
                     Text(text = "Vol.${volume} ")
                 Text(text = "Ch.${chapter} ")
                 if (!chapterTitle.isNullOrBlank())
@@ -47,7 +47,7 @@ fun ChapterItem(
             }
             Row(modifier = Modifier.fillMaxWidth().padding(top=4.dp)) {
                 Text(text = "${date.monthValue}/${date.dayOfMonth}/${date.year} ", fontSize = 12.sp)
-                if (scanlator.isNullOrBlank())
+                if (!scanlator.isNullOrBlank())
                     Text(text = "• $scanlator", fontSize = 12.sp)
             }
 

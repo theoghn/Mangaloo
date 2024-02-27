@@ -1,5 +1,6 @@
 package com.example.mangaloo.ui.chapter.list
 
+import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
@@ -90,12 +91,13 @@ fun ChapterList(
             DetailsSection(mangaName, description = description,mangaAuthor,follows,rating)
         }
         items(chapterList){ ch ->
-            val scanlationGroup = manga?.relationships?.filter { it.type == "scanlation_group" }
+            val scanlationGroup = ch.relationships.filter { it.type == "scanlation_group" }
+            Log.d("sada", "${scanlationGroup[0].attributes.name}")
             ChapterItem(
                 volume = ch.attributes.volume,
                 chapter = ch.attributes.chapter,
                 chapterTitle = ch.attributes.title,
-                scanlator = if(scanlationGroup?.count()!! >0) scanlationGroup[0].attributes.name else "",
+                scanlator = if(scanlationGroup.count() >0) "${scanlationGroup[0].attributes.name}" else "",
                 uploadDate =ch.attributes.createdAt.substringBefore("+"),
                 openChapter = {chapterId:String->openChapter(chapterId)},
                 chapterId = ch.id
