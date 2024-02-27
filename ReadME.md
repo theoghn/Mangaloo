@@ -9,14 +9,15 @@ The home screen features a section at the top displaying our current recommendat
 The 'Popular' tab showcases the most frequently saved manga at the moment, while the 'Best Rated' tab is self-explanatory. (both sections are always up to date)\
 In this menu all the cards redirect to their specific [chapter view](#view-and-read-chapters)
 
-<img src="ReadME-Resources\Home.gif" width="230">&emsp;<img src="ReadME-Resources\Home2.gif" width="230">&emsp;
+<img src="readMe-Resources\Home.gif" width="230">&emsp;<img src="readMe-Resources\Home2.gif" width="230">&emsp;
 <br><br>
 
 - ### Search 
 
 Utilize the search screen to effortlessly discover manga titles by searching with their respective titles.
 
-<img src="ReadME-Resources\Search2.gif" width="230">&emsp;
+
+<img src="readMe-Resources\Search2.gif" width="230">&emsp;
 
 <br><br>
 
@@ -26,8 +27,7 @@ Utilize the search screen to effortlessly discover manga titles by searching wit
 Users can view detailed information, including the author, rating, follows, and all available chapters and also expand manga description using the down arrow to. \
 Each chapter description includes its title, volume, upload date, and scan group.
 
-<img src="ReadME-Resources\Details2.gif" width="230">&emsp;
-<img src="ReadME-Resources\Chapter.gif" width="230">&emsp;
+<img src="readMe-Resources\Details2.gif" width="230">&emsp;
+<img src="readMe-Resources\Chapter.gif" width="230">&emsp;
 
 
-<!-- ![sewew](ReadME-Resources\Home.gif) -->
