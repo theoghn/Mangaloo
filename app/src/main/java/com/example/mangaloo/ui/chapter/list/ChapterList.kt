@@ -120,18 +120,26 @@ fun ChapterList(
     val saveManga: (Manga) -> Unit = { m ->
         viewModel.saveManga(m)
     }
-    TopBar(title = mangaName, goBack = { goBack() }) {
-        if (dbManga != null) {
-            viewModel.saveManga(dbManga)
-        }
-    }
+    val isSaved by viewModel.isSaved.collectAsState()
+    TopBar(title = mangaName, goBack = { goBack() },
+        saveManga = {if (dbManga != null) { viewModel.saveManga(dbManga) } },
+        deleteManga = {if(isSaved){
+            manga?.id?.let { viewModel.deleteManga(it) }
+        } },
+        isSaved = isSaved)
 
 
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(title: String?, goBack: () -> Boolean, saveManga: () -> Unit) {
+fun TopBar(
+    title: String?,
+    goBack: () -> Boolean,
+    saveManga: () -> Unit,
+    isSaved: Boolean,
+    deleteManga: () -> Unit
+) {
     TopAppBar(
         scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
         colors = TopAppBarDefaults.topAppBarColors(Color.Transparent),
@@ -148,14 +156,15 @@ fun TopBar(title: String?, goBack: () -> Boolean, saveManga: () -> Unit) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                var liked = remember { false }
                 Spacer(modifier = Modifier.weight(1f))
                 Text(text = "$title", fontWeight = FontWeight.W800, fontSize = 24.sp)
                 Spacer(modifier = Modifier.weight(1f))
-                IconButton(modifier = Modifier, onClick = { saveManga(); liked = true }) {
+                IconButton(
+                    modifier = Modifier,
+                    onClick = { if (!isSaved) saveManga() else deleteManga() }) {
                     Icon(
                         modifier = Modifier.size(30.dp),
-                        imageVector = if (!liked) Icons.Outlined.FavoriteBorder else Icons.Filled.Favorite,
+                        imageVector = if (!isSaved) Icons.Outlined.FavoriteBorder else Icons.Filled.Favorite,
                         contentDescription = "Drop-Down Arrow"
                     )
 

@@ -9,4 +9,10 @@ class AppRepository @Inject constructor(
     suspend fun insertManga(manga: Manga){
         return appDAO.insertOne(manga)
     }
+    suspend fun getManga(mangaId:String):Manga?{
+        return appDAO.getManga(mangaId)
+    }
+    suspend fun deleteManga(mangaId: String){
+        return appDAO.deleteManga(mangaId)
+    }
 }

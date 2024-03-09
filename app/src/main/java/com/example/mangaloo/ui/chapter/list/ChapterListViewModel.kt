@@ -28,9 +28,17 @@ class ChapterListViewModel@AssistedInject constructor(
     val follows = MutableStateFlow<Number>(0)
     val rating = MutableStateFlow<Number>(0)
     val coverLink =MutableStateFlow("")
-
+    val isSaved = MutableStateFlow(false)
+    val dbManga= MutableStateFlow<Manga?>(null)
 
     init {
+        viewModelScope.launch {
+            val res = repository.getManga(mangaId)
+            if(res!=null){
+                isSaved.update { true }
+            }
+
+        }
         getChapters(mangaId)
         getManga(mangaId)
         getStats(mangaId)
@@ -61,7 +69,6 @@ class ChapterListViewModel@AssistedInject constructor(
                 val listResult = MangaDexApi.retrofitService.getMangaChapters(mangaId,150, listOf("en"))
                 if (listResult.isSuccessful && listResult.body() != null) {
                     chapters.update {listResult.body()!!.data}
-
 //                    Log.d("Chapter", chapters.value.count().toString())
                 }
             } catch (e: HttpException) {
@@ -69,7 +76,6 @@ class ChapterListViewModel@AssistedInject constructor(
             } catch (e: IOException) {
                 Log.d("Errorrrrr", "io")
             }
-
         }
     }
     private fun getManga(mangaId: String) {
@@ -94,9 +100,17 @@ class ChapterListViewModel@AssistedInject constructor(
     }
     fun saveManga(manga: Manga){
         viewModelScope.launch {
+            isSaved.update { true }
 //            check if manga exists in db and make the love mark filled and if clicked to do the revers
             repository.insertManga(manga)
             Log.d("RoomDB","Manga Saved")
+        }
+    }
+
+    fun deleteManga(mangaId:String){
+        viewModelScope.launch {
+            isSaved.update { false }
+            repository.deleteManga(mangaId)
         }
     }
 
