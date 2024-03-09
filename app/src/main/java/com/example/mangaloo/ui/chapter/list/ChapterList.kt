@@ -70,9 +70,6 @@ fun ChapterList(
     val rating by viewModel.rating.collectAsState()
 
 
-
-
-
     val mangaName = manga?.attributes?.title?.en?:manga?.attributes?.title?.jaRo
     val mangaAuthor = manga?.relationships?.get(0)?.attributes?.name
     val description = manga?.attributes?.description?.en

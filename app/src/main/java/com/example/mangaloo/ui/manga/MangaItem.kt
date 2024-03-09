@@ -1,6 +1,11 @@
 package com.example.mangaloo.ui.manga
 
 import android.graphics.BlurMaskFilter
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -13,22 +18,39 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import coil.compose.AsyncImagePainter
+import coil.compose.rememberAsyncImagePainter
+import coil.imageLoader
+import coil.request.ImageRequest
+import coil.size.Size
 import com.example.mangaloo.navigation.NavRoutes
 
 @Composable
@@ -41,6 +63,13 @@ fun MangaItem(
     lastChapter: String?,
     navigate: (String) -> Unit,
 ) {
+    val context = LocalContext.current
+    val painter = rememberAsyncImagePainter(
+        model = ImageRequest.Builder(context)
+            .data(coverImage)
+            .size(Size.ORIGINAL) // Set the target size to load the image at.
+            .build()
+    )
     Box(
         modifier = Modifier
             .padding(15.dp)
@@ -49,45 +78,57 @@ fun MangaItem(
             .height(140.dp)
             .clip(RoundedCornerShape(20.dp))
             .background(Color(0xFF11244A))
-            .clickable {navigate(NavRoutes.chapterList.route+"/$mangaId")  }
-    ) {
-        Row {
-            AsyncImage(
-                model = coverImage,
-                contentDescription = "cover",
-                Modifier
-                    .padding(8.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .fillMaxHeight()
-                    .width(90.dp),
-                contentScale = ContentScale.Crop
-            )
-            Column(Modifier.padding(start = 10.dp)) {
-                Text(
-                    text = "$mangaName",
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 16.sp,
-                    modifier = Modifier.padding(8.dp),
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Spacer(modifier = Modifier
-                    .fillMaxHeight()
-                    .weight(1f))
-                Text(text = "by $mangaAuthor", fontSize = 16.sp, modifier = Modifier.padding(8.dp))
-                Text(
-                    text = "$mangaStatus ${if (lastChapter != ""&& lastChapter!= null) ": $lastChapter" else ""}",
-                    color = if (mangaStatus == "ongoing") Color(0xFFFF6905) else Color(0xFF2C5F2D),
-                    modifier = Modifier
-                        .padding(bottom = 20.dp, start = 8.dp)
-                        .background(
-                            if (mangaStatus == "ongoing") Color(0xFFFFEBF0) else Color(0xFF97BC62),
-                            RoundedCornerShape(30.dp)
-                        )
-                        .padding(start = 5.dp, end = 5.dp),
-                )
+            .run {
+            if (painter.state is AsyncImagePainter.State.Success) {
+                    this
+                } else {
+                    this.shimmerEffect()
+                }
             }
+            .clickable { navigate(NavRoutes.chapterList.route + "/$mangaId") }
+    ) {
 
+        if (painter.state is AsyncImagePainter.State.Success) {
+            Row {
+                Image(
+                    painter = painter,
+                    contentDescription = "cover",
+                    Modifier
+                        .padding(8.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .fillMaxHeight()
+                        .width(90.dp),
+                    contentScale = ContentScale.Crop
+                )
+                Column(Modifier.padding(start = 10.dp)) {
+                    Text(
+                        text = "$mangaName",
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 16.sp,
+                        modifier = Modifier.padding(8.dp),
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Spacer(modifier = Modifier
+                        .fillMaxHeight()
+                        .weight(1f))
+                    Text(text = "by $mangaAuthor", fontSize = 16.sp, modifier = Modifier.padding(8.dp))
+                    Text(
+                        text = "$mangaStatus ${if (lastChapter != ""&& lastChapter!= null) ": $lastChapter" else ""}",
+                        color = if (mangaStatus == "ongoing") Color(0xFFFF6905) else Color(0xFF2C5F2D),
+                        modifier = Modifier
+                            .padding(bottom = 20.dp, start = 8.dp)
+                            .background(
+                                if (mangaStatus == "ongoing") Color(0xFFFFEBF0) else Color(
+                                    0xFF97BC62
+                                ),
+                                RoundedCornerShape(30.dp)
+                            )
+                            .padding(start = 5.dp, end = 5.dp),
+                    )
+                }
+
+            }
         }
     }
 
@@ -100,6 +141,36 @@ fun MangaItem(
 //        MangaItem("https://uploads.mangadex.org/covers/32d76d19-8a05-4db0-9fc2-e0b0648fe9d0/e90bdc47-c8b9-4df7-b2c0-17641b645ee1.jpg.512.jpg")
 //    }
 //}
+
+
+fun Modifier.shimmerEffect(): Modifier = composed {
+    var size by remember {
+        mutableStateOf(IntSize.Zero)
+    }
+    val transition = rememberInfiniteTransition(label = "")
+    val startOffsetX by transition.animateFloat(
+        initialValue = -2 * size.width.toFloat(),
+        targetValue = 2 * size.width.toFloat(),
+        animationSpec = infiniteRepeatable(
+            animation = tween(1000)
+        ), label = ""
+    )
+
+    background(
+        brush = Brush.linearGradient(
+            colors = listOf(
+                Color(0xFF11244A),
+                Color(0xFF162F61),
+                Color(0xFF11244A),
+            ),
+            start = Offset(startOffsetX, 0f),
+            end = Offset(startOffsetX + size.width.toFloat(), size.height.toFloat())
+        )
+    )
+        .onGloballyPositioned {
+            size = it.size
+        }
+}
 
 fun Modifier.shadow2(
     color: Color = Color.Black,

@@ -1,6 +1,7 @@
 package com.example.mangaloo.ui.manga.search
 
 
+import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -18,7 +19,6 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -32,21 +32,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.annotation.ExperimentalCoilApi
 import com.example.mangaloo.model.api.manga.ApiManga
 import com.example.mangaloo.ui.manga.MangaItem
 
+@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun MangaSearch(viewModel: MangaSearchViewModel, navigate: (String) -> Unit) {
     val response by viewModel.response.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
 
-    val search: (String) -> Unit = { title ->
-        viewModel.getManga(title)
+    val search: (String,Context) -> Unit = { title,context ->
+        viewModel.getManga(title,context)
     }
     val focusManager = LocalFocusManager.current
+
 
 
     Scaffold(topBar = {
@@ -124,11 +128,13 @@ fun NoDataText(paddingValues: PaddingValues) {
     }
 
 }
+@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun SearchBar(
-    search: (String) -> Unit,
-    viewModel: MangaSearchViewModel
+    search: (String, Context) -> Unit,
+    viewModel: MangaSearchViewModel,
 ) {
+    val context = LocalContext.current
     val searchTitle by viewModel.searchTitle.collectAsState()
     val focusManager = LocalFocusManager.current
     Row(
@@ -154,7 +160,7 @@ fun SearchBar(
             leadingIcon = { Icon(imageVector = Icons.Outlined.Search, contentDescription = null) },
             keyboardActions = KeyboardActions(
                 onDone = {
-                    search(searchTitle)
+                    search(searchTitle,context)
                     focusManager.clearFocus()
                 }
             )

@@ -1,8 +1,12 @@
 package com.example.mangaloo.ui.manga.search
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import coil.annotation.ExperimentalCoilApi
+import coil.imageLoader
+import coil.memory.MemoryCache
 import com.example.mangaloo.api.MangaDexApi
 import com.example.mangaloo.model.SortingCriteria
 import com.example.mangaloo.model.api.manga.ApiMangaResponse
@@ -66,7 +70,23 @@ class MangaSearchViewModel : ViewModel() {
 //    }
 
 
-    fun getManga(title: String) {
+    @OptIn(ExperimentalCoilApi::class)
+    fun getManga(title: String, context: Context) {
+        if(response.value.data.isNotEmpty()){
+            for(manga in response.value.data) {
+                val mangaId = manga?.id
+                val rel = manga?.relationships?.filter { it.type == "cover_art" }
+                val coverLink = rel?.get(0)?.attributes?.fileName
+                val coverFinalLink =
+                    if (coverLink == null) "" else "https://uploads.mangadex.org/covers/$mangaId/$coverLink"
+                if (!coverLink.isNullOrBlank()){
+                    context.imageLoader.diskCache?.remove(coverFinalLink)
+                    context.imageLoader.memoryCache?.remove(MemoryCache.Key(coverFinalLink))
+                    Log.d("Cache","image uncached")
+                }
+            }
+
+        }
         isLoading.update { true }
         viewModelScope.launch {
             val order = mapOf(
