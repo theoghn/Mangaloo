@@ -1,4 +1,4 @@
-package com.example.mangaloo.model
+package com.example.mangaloo.model.db
 
 import androidx.room.Embedded
 import androidx.room.Entity
@@ -12,6 +12,6 @@ data class Chapter(
     val id: String,
     val mangaId:String,
     val scanlationId:String,
-    @Embedded val attributes: ChapterAttributes,
+//    @Embedded val attributes: ChapterAttributes,
 )
 

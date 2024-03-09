@@ -8,7 +8,6 @@ import coil.annotation.ExperimentalCoilApi
 import coil.imageLoader
 import coil.memory.MemoryCache
 import com.example.mangaloo.api.MangaDexApi
-import com.example.mangaloo.model.SortingCriteria
 import com.example.mangaloo.model.api.manga.ApiMangaResponse
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update

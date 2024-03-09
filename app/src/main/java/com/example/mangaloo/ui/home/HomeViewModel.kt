@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mangaloo.api.MangaDexApi
-import com.example.mangaloo.model.SortingCriteria
 import com.example.mangaloo.model.api.manga.ApiManga
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update

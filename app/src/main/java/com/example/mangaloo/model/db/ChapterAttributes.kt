@@ -1,4 +1,4 @@
-package com.example.mangaloo.model
+package com.example.mangaloo.model.db
 
 import androidx.room.Entity
 import kotlinx.serialization.Serializable

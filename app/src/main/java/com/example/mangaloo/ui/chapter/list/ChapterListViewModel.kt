@@ -4,8 +4,10 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mangaloo.api.MangaDexApi
+import com.example.mangaloo.database.AppRepository
 import com.example.mangaloo.model.api.chapter.ApiChapter
 import com.example.mangaloo.model.api.manga.ApiManga
+import com.example.mangaloo.model.db.Manga
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -17,6 +19,7 @@ import retrofit2.HttpException
 import java.io.IOException
 @HiltViewModel(assistedFactory = ChapterListViewModel.ChapterListViewModelFactory::class)
 class ChapterListViewModel@AssistedInject constructor(
+    private val repository: AppRepository,
     @Assisted mangaId: String
 ) : ViewModel() {
 
@@ -59,7 +62,7 @@ class ChapterListViewModel@AssistedInject constructor(
                 if (listResult.isSuccessful && listResult.body() != null) {
                     chapters.update {listResult.body()!!.data}
 
-                    Log.d("Chapter", chapters.value.count().toString())
+//                    Log.d("Chapter", chapters.value.count().toString())
                 }
             } catch (e: HttpException) {
                 Log.d("Errorrrrr", "failed")
@@ -89,6 +92,16 @@ class ChapterListViewModel@AssistedInject constructor(
 
         }
     }
+    fun saveManga(manga: Manga){
+        viewModelScope.launch {
+//            check if manga exists in db and make the love mark filled and if clicked to do the revers
+            repository.insertManga(manga)
+            Log.d("RoomDB","Manga Saved")
+        }
+    }
+
+
+
     @AssistedFactory
     interface ChapterListViewModelFactory {
         fun create(mangaId: String): ChapterListViewModel

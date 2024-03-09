@@ -1,6 +1,5 @@
 package com.example.mangaloo.api
 
-import com.example.mangaloo.model.SortingCriteria
 import com.example.mangaloo.model.api.ApiImagesResponse
 import com.example.mangaloo.model.api.chapter.ApiChapterResponse
 import com.example.mangaloo.model.api.manga.ApiMangaResponse

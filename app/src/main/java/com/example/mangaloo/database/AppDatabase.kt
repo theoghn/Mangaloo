@@ -2,10 +2,10 @@ package com.example.mangaloo.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.example.mangaloo.model.Chapter
+import com.example.mangaloo.model.db.Manga
 
 @Database(
-    entities = [Chapter::class],
+    entities = [Manga::class],
     version = 1
 )
 abstract class AppDatabase:RoomDatabase() {
