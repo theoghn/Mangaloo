@@ -15,4 +15,8 @@ class AppRepository @Inject constructor(
     suspend fun deleteManga(mangaId: String){
         return appDAO.deleteManga(mangaId)
     }
+
+    suspend fun getAllMangas():List<Manga>{
+        return appDAO.getAllMangas()
+    }
 }

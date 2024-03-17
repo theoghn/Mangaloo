@@ -17,6 +17,7 @@ class HomeViewModel : ViewModel() {
     val bestRatedManga = MutableStateFlow(emptyList<ApiManga?>())
 
     init {
+        Log.d("HomeView","init block")
         getManga("followedCount")
 
         getManga("rating")

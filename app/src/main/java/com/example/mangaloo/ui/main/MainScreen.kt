@@ -27,6 +27,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -44,6 +46,7 @@ import com.example.mangaloo.ui.home.HomeViewModel
 import com.example.mangaloo.ui.manga.library.MangaLibrary
 import com.example.mangaloo.ui.manga.search.MangaSearch
 import com.example.mangaloo.ui.manga.search.MangaSearchViewModel
+import androidx.compose.ui.res.vectorResource
 
 @Composable
 fun MainScreen(mainScreenViewModel: MainScreenViewModel) {
@@ -88,7 +91,7 @@ fun NavigationHost(navController: NavHostController, isNavbarVisible: MutableSta
 
         composable(NavRoutes.mangaLibrary.route) {
             isNavbarVisible.value = true
-            MangaLibrary { route: String -> navController.navigate(route) }
+            MangaLibrary(navigate = { route: String -> navController.navigate(route) })
         }
 
 
@@ -127,10 +130,12 @@ fun NavBar(navController: NavHostController, mainScreenViewModel: MainScreenView
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentDestination = navBackStackEntry?.destination
         NavBarItems.BarItems.forEach { item ->
+
             BottomNavigationItem(
+
                 icon = {
                     Icon(
-                        imageVector = item.unselected,
+                        painter = if (item.selected!= null) rememberVectorPainter(item.selected) else painterResource(id = item.selectedResId) ,
                         tint = if (currentDestination?.hierarchy?.any { it.route == item.route } == true) Color.White else Color.Gray,
                         contentDescription = null,
                         modifier = Modifier.fillMaxSize(0.55F)

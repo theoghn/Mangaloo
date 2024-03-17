@@ -16,4 +16,6 @@ interface AppDAO {
 
     @Query("DELETE FROM manga WHERE id = :mangaId")
     suspend fun deleteManga(mangaId:String)
+    @Query("SELECT * FROM manga")
+    suspend fun getAllMangas():List<Manga>
 }

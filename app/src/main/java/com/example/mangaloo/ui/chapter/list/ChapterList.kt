@@ -104,7 +104,6 @@ fun ChapterList(
         }
         items(chapterList) { ch ->
             val scanlationGroup = ch.relationships.filter { it.type == "scanlation_group" }
-            Log.d("sada", "${scanlationGroup[0].attributes.name}")
             ChapterItem(
                 volume = ch.attributes.volume,
                 chapter = ch.attributes.chapter,
@@ -253,7 +252,7 @@ fun DetailsSection(
                 modifier = Modifier
                     .padding(top = 12.dp)
                     .graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen)
-                    .then(if (expandedState) Modifier else Modifier.fadingEdge()),
+                    .then(if (expandedState) Modifier else Modifier.fadingEdge(0.6f,1f)),
 
                 text = "$description",
                 maxLines = if (expandedState) 99 else 3,
@@ -317,10 +316,10 @@ fun TitleStats(title: String, rating: String, follow: String) {
     }
 }
 
-fun Modifier.fadingEdge() = this.drawWithContent {
+fun Modifier.fadingEdge(from :Float,to:Float) = this.drawWithContent {
     drawContent()
     drawRect(
-        brush = Brush.verticalGradient(0.6f to Color.Black, 1f to Color.Transparent),
+        brush = Brush.verticalGradient(from to Color.DarkGray, to to Color.Transparent),
         blendMode = BlendMode.DstIn
     )
 }

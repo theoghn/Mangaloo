@@ -52,7 +52,7 @@ import kotlin.math.absoluteValue
 
 @Composable
 fun Home(viewModel: HomeViewModel, navigate: (String) -> Unit) {
-    Scaffold(topBar = { HomeTopBar() }) {
+    Scaffold(topBar = { TopBarTitle("Discover") }) {
         Column(Modifier.padding(it)) {
             Recommendation { route: String -> navigate(route) }
             Buttons(viewModel)
@@ -62,14 +62,14 @@ fun Home(viewModel: HomeViewModel, navigate: (String) -> Unit) {
 }
 
 @Composable
-fun HomeTopBar() {
+fun TopBarTitle(title:String) {
     Row(
         Modifier
             .fillMaxWidth()
             .padding(start = 14.dp,end = 14.dp, bottom = 18.dp,top = 2.dp)
     ) {
         Text(
-            "Discover", fontSize = 28.sp, fontWeight = FontWeight.SemiBold, fontFamily = FontFamily(
+            title, fontSize = 28.sp, fontWeight = FontWeight.SemiBold, fontFamily = FontFamily(
                 Font(R.font.nunito_bold)
             )
         )
