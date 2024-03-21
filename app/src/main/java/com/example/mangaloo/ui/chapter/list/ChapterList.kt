@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -48,6 +49,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -120,12 +122,20 @@ fun ChapterList(
         viewModel.saveManga(m)
     }
     val isSaved by viewModel.isSaved.collectAsState()
-    TopBar(title = mangaName, goBack = { goBack() },
-        saveManga = {if (dbManga != null) { viewModel.saveManga(dbManga) } },
-        deleteManga = {if(isSaved){
-            manga?.id?.let { viewModel.deleteManga(it) }
-        } },
-        isSaved = isSaved)
+    TopBar(
+        title = mangaName, goBack = { goBack() },
+        saveManga = {
+            if (dbManga != null) {
+                viewModel.saveManga(dbManga)
+            }
+        },
+        deleteManga = {
+            if (isSaved) {
+                manga?.id?.let { viewModel.deleteManga(it) }
+            }
+        },
+        isSaved = isSaved
+    )
 
 
 }
@@ -156,7 +166,15 @@ fun TopBar(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Spacer(modifier = Modifier.weight(1f))
-                Text(text = "$title", fontWeight = FontWeight.W800, fontSize = 24.sp)
+                Text(
+                    text = "$title",
+                    fontWeight = FontWeight.W800,
+                    fontSize = 22.sp,
+                    modifier = Modifier.fillMaxWidth(0.7f),
+                    maxLines = 1,
+                    textAlign = TextAlign.Center,
+                    overflow = TextOverflow.Ellipsis
+                )
                 Spacer(modifier = Modifier.weight(1f))
                 IconButton(
                     modifier = Modifier,
@@ -252,7 +270,7 @@ fun DetailsSection(
                 modifier = Modifier
                     .padding(top = 12.dp)
                     .graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen)
-                    .then(if (expandedState) Modifier else Modifier.fadingEdge(0.6f,1f)),
+                    .then(if (expandedState) Modifier else Modifier.fadingEdge(0.6f, 1f)),
 
                 text = "$description",
                 maxLines = if (expandedState) 99 else 3,
@@ -316,7 +334,7 @@ fun TitleStats(title: String, rating: String, follow: String) {
     }
 }
 
-fun Modifier.fadingEdge(from :Float,to:Float) = this.drawWithContent {
+fun Modifier.fadingEdge(from: Float, to: Float) = this.drawWithContent {
     drawContent()
     drawRect(
         brush = Brush.verticalGradient(from to Color.DarkGray, to to Color.Transparent),

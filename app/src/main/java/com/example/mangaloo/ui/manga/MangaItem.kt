@@ -38,6 +38,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
@@ -109,19 +110,27 @@ fun MangaItem(
                         .fillMaxHeight()
                         .weight(1f))
                     Text(text = "by $mangaAuthor", fontSize = 16.sp, modifier = Modifier.padding(8.dp))
-                    Text(
-                        text = "$mangaStatus ${if (lastChapter != ""&& lastChapter!= null) ": $lastChapter" else ""}",
-                        color = if (mangaStatus == "ongoing") Color(0xFFFF6905) else Color(0xFF2C5F2D),
-                        modifier = Modifier
-                            .padding(bottom = 20.dp, start = 8.dp)
-                            .background(
-                                if (mangaStatus == "ongoing") Color(0xFFFFEBF0) else Color(
-                                    0xFF97BC62
-                                ),
-                                RoundedCornerShape(30.dp)
-                            )
-                            .padding(start = 5.dp, end = 5.dp),
-                    )
+                    Spacer(modifier = Modifier
+                        .fillMaxHeight()
+                        .weight(1f))
+                    Box(Modifier.padding(bottom = 12.dp, start = 8.dp)){
+                        Text(
+                            text = "$mangaStatus ${if (!lastChapter.isNullOrEmpty()) ": $lastChapter" else ""}",
+                            color = if (mangaStatus == "ongoing") Color(0xFFFF6905) else Color(0xFF2C5F2D),
+                            modifier = Modifier
+
+                                .background(
+                                    if (mangaStatus == "ongoing") Color(0xFFFFEBF0) else Color(
+                                        0xFF97BC62
+                                    ),
+                                    RoundedCornerShape(10.dp)
+                                )
+//                                bottom for aligning lower case text
+                                .padding(start = 6.dp, end = 6.dp, bottom = 4.dp),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+
                 }
 
             }
